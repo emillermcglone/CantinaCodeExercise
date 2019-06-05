@@ -1,9 +1,11 @@
+#!/usr/bin/env python3.7
+
 import json
 import sys
 
 with open("SystemViewController.json", "r") as JSONFile:
     exerciseData = JSONFile.read()
-data = json.loads(exerciseData)
+    data = json.loads(exerciseData)
 
 
 def matchingViews(attribute, selector, d):
@@ -31,20 +33,21 @@ def matchingViews(attribute, selector, d):
     return ns.matches
 
 
-def parseSelector(input):
-    """ Determine the view attribute from the input """
-    if input[0] == ".":
-        result = matchingViews("classNames", input[1:], data)
-    elif input[0] == "#":
-        result = matchingViews("identifier", input[1:], data)
+def parseSelector(selector):
+    """ Determine the view attribute from the selector """
+    if selector[0] == ".":
+        result = matchingViews("classNames", selector[1:], data)
+    elif selector[0] == "#":
+        result = matchingViews("identifier", selector[1:], data)
     else:
-        result = matchingViews("class", input, data)
+        result = matchingViews("class", selector, data)
     return result
 
 
-def echoInput(input, output):
+def echoInput(selector, output):
     "Echo input to command line"
-    result = json.dumps(parseSelector(input))
+    selector = selector.strip('\"')
+    result = json.dumps(parseSelector(selector))
     output.write(result)
 
 
