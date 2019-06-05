@@ -5,9 +5,6 @@ with open("SystemViewController.json", "r") as JSONFile:
     exerciseData = JSONFile.read()
 data = json.loads(exerciseData)
 
-# print(data.items())
-# print(len(data.items()))
-
 
 def matchSelector(attribute, selector, d):
 
@@ -39,23 +36,26 @@ def matchSelector(attribute, selector, d):
                 ns.matches.append(d)
 
     inner(attribute, selector, d)
-    return ns.matches  # , ns.count
+    return ns.matches
 
 
-print(matchSelector("identifier", "rate", data))
-
-"""
 def parseSelector(input):
+    """ Determine the view attribute """
     if input[0] == ".":
-        matchSelector("classNames", input[1:], data)
-
+        result = matchSelector("classNames", input[1:], data)
+    elif input[0] == "#":
+        result = matchSelector("identifier", input[1:], data)
+    else:
+        result = matchSelector("class", input, data)
+    return result
 
 
 def echoInput(input, output):
-    pass
+    result = json.dumps(parseSelector(input))
+    output.write(result)
 
 
 #matchSelector("classNames", "columns", data)
 if __name__ == "__main__":
-    echoInput(input("Enter a selector: "), sys.stdout)
-"""
+    while True:
+        echoInput(input("\nEnter a selector: "), sys.stdout)
